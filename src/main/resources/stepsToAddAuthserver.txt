@@ -1,0 +1,30 @@
+Fileupload microservice wants to use the authserver microservice for token authentication and validation.
+Steps to follow for inserting data is following -
+1.Register your service with authserverDB (services Table).
+2.Create admin and user role for the fileupload microservice in role table of authserverDB.
+3.Create a new user in users table of authserverDB.
+4.Assign a role that is created for the fileupload microservice.
+5.Identify all the endpoints (upto the baseurl of endpoint) present in the microservice.
+    Following are the endpoints present in the fileupload microservice.
+    (Resources of fileupload microservice)
+    1.GET,POST,PUT,DELETE,OPTIONS /entityContext
+    2.GET,POST,PUT,DELETE,OPTIONS /fileUpload
+    3.GET,POST,PUT,DELETE,OPTIONS /context
+    4.GET,POST,PUT,DELETE,OPTIONS /uploadLocationContext
+    5.POST /uploadFile
+    6.GET /downloadFile
+6.Insert identified resources in resources table of authserverDB with some resource_id like 30001 for better CRUD operations.
+7.Insert every method(GET,POST,PUT,DELETE) associated with the resource in resource_methods table of authserverDB.
+	e.g resource_id    method
+		   1            GET
+		   1            POST
+		   1            PUT
+		   1            DELETE
+		   1            OPTIONS
+8.Insert the permissions for the associated resource_id,resource_method_id and the created role.
+Refer SQL file attached for following above mentioned steps.
+
+Steps to connect fileupload microservice to the authserver microservice is following-
+1.Create a FeignClient proxy to communication with the authserver microservice by specifying the url of authserver microservice.
+2.Create the payload/other classes that will match the /validateToken REST endpoint by refferring to the authserver validateToken method.
+3.Create an interceptor to intercept the incomming request and redirect the request to the authserver microservice by using the FeignClient utility.
